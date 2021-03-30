@@ -1,0 +1,33 @@
+{
+    "name": "workhouse-advertising/omnipay-latitudepay",
+    "type": "library",
+    "description": "Latitude Financial Services Payments gateway for Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "latitude",
+        "purchase"
+    ],
+    "homepage": "https://github.com/workhouse-advertising/omnipay-latitudepay",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon Geoghegan",
+            "email": "simon@workhouseadvertising.com.au"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Omnipay\\LatitudePay\\" : "src/"
+        }
+    },
+    "require": {
+        "omnipay/common": "^3"
+    },
+    "require-dev": {
+        "omnipay/tests": "^3"
+    }
+}
