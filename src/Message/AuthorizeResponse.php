@@ -11,52 +11,29 @@ use Omnipay\Common\Message\RedirectResponseInterface;
 
 class AuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
 {
-    protected $liveEndpoint = 'https://api.latitudepay.com';
-    protected $testEndpoint = 'https://api.uat.latitudepay.com';
-
-    /**
-     * @inheritDoc
-     */
-    public function getRedirectUrl()
-    {
-        return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
-    }
-
-    // /**
-    //  * Get the required redirect method (either GET or POST).
-    //  *
-    //  * @return string
-    //  */
-    // public function getRedirectMethod()
-    // {
-    //     return 'POST';
-    // }
-
-    /**
-     * Does the response require a redirect?
-     *
-     * @return boolean
-     */
-    public function isRedirect()
-    {
-        return true;
-    }
-
-    /**
-     * Gets the redirect form data array, if the redirect method is POST.
-     *
-     * @return array
-     */
-    public function getRedirectData()
-    {
-        return $this->getData();
-    }
-
     /**
      * @inheritDoc
      */
     public function isSuccessful()
     {
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isRedirect()
+    {
+        $data = $this->getData();
+        return isset($data['redirectUrl']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRedirectUrl()
+    {
+        $data = $this->getData();
+        return $data['redirectUrl'] ?? null;
     }
 }
