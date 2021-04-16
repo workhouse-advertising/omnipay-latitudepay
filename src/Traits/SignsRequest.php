@@ -4,7 +4,7 @@ namespace Omnipay\LatitudePay\Traits;
 
 trait SignsRequest
 {
-    protected $stupidGluedString = '';
+    protected $latitudePaySignatureGluedString = '';
 
     /**
      * NOTE: Adapted from Magento 2 extension.
@@ -33,7 +33,7 @@ trait SignsRequest
         //     hash_hmac('sha256', base64_encode($this->recursiveImplode($payload, '', true)), $this->getClientSecret())
         // );
 
-        $this->stupidGluedString = '';
+        $this->latitudePaySignatureGluedString = '';
         // dd($this->recursiveImplode($payload, '', true));
         return hash_hmac('sha256', base64_encode($this->recursiveImplode($payload, '', true)), $this->getClientSecret());
 
@@ -47,7 +47,7 @@ trait SignsRequest
         // // dd($salesStringStrippedBase64encoded, hash_hmac('sha256', str_replace(' ', '', $salesStringStrippedBase64encoded), $this->getClientSecret()));
         // return hash_hmac('sha256', str_replace(' ', '', $salesStringStrippedBase64encoded), $this->getClientSecret());
         // // WooCommerce way.
-        // // $this->stupidGluedString = '';
+        // // $this->latitudePaySignatureGluedString = '';
         // // return hash_hmac('sha256', base64_encode($this->recursiveImplode((array) $payload, '', true)), $this->getClientSecret());
 
         // // return hash_hmac('sha256', base64_encode($this->recursiveImplode((array) $payload, '', true)), $this->getClientSecret());
@@ -74,15 +74,15 @@ trait SignsRequest
     {
         foreach ($array as $key => $value) {
             if (is_string($key)) {
-                $this->stupidGluedString .= $key . $glue;
+                $this->latitudePaySignatureGluedString .= $key . $glue;
             }
-            is_array($value) ? $this->recursiveImplode($value, $glue, $include_keys, $trim_all) : $this->stupidGluedString .= trim(json_encode($value, JSON_UNESCAPED_SLASHES), '"') . $glue;
+            is_array($value) ? $this->recursiveImplode($value, $glue, $include_keys, $trim_all) : $this->latitudePaySignatureGluedString .= trim(json_encode($value, JSON_UNESCAPED_SLASHES), '"') . $glue;
         }
         // Removes last $glue from string
-        strlen($glue) > 0 and $this->stupidGluedString = substr($this->stupidGluedString, 0, -strlen($glue));
+        strlen($glue) > 0 and $this->latitudePaySignatureGluedString = substr($this->latitudePaySignatureGluedString, 0, -strlen($glue));
         // Trim ALL whitespace
-        $trim_all and $this->stupidGluedString = preg_replace("/(\s)/ixsm", '', $this->stupidGluedString);
-        return (string)$this->stupidGluedString;
+        $trim_all and $this->latitudePaySignatureGluedString = preg_replace("/(\s)/ixsm", '', $this->latitudePaySignatureGluedString);
+        return (string)$this->latitudePaySignatureGluedString;
     }
 
     // /**
@@ -103,18 +103,18 @@ trait SignsRequest
     //  */
     // public function recursiveImplode(array $array, $glue = ',', $include_keys = false, $trim_all = true)
     // {
-    //     // $this->stupidGluedString = '';
+    //     // $this->latitudePaySignatureGluedString = '';
     //     foreach ($array as $key => $value) {
     //         if (is_string($key)) {
-    //             $this->stupidGluedString .= $key . $glue;
+    //             $this->latitudePaySignatureGluedString .= $key . $glue;
     //         }
-    //         is_array($value) ? $this->recursiveImplode($value, $glue, $include_keys, $trim_all) : $this->stupidGluedString .= trim(json_encode($value, JSON_UNESCAPED_SLASHES), '"') . $glue;
+    //         is_array($value) ? $this->recursiveImplode($value, $glue, $include_keys, $trim_all) : $this->latitudePaySignatureGluedString .= trim(json_encode($value, JSON_UNESCAPED_SLASHES), '"') . $glue;
     //     }
     //     // Removes last $glue from string
-    //     strlen($glue) > 0 and $this->stupidGluedString = substr($this->stupidGluedString, 0, -strlen($glue));
+    //     strlen($glue) > 0 and $this->latitudePaySignatureGluedString = substr($this->latitudePaySignatureGluedString, 0, -strlen($glue));
     //     // Trim ALL whitespace
-    //     $trim_all and $this->stupidGluedString = preg_replace("/(\s)/ixsm", '', $this->stupidGluedString);
-    //     return (string) $this->stupidGluedString;
+    //     $trim_all and $this->latitudePaySignatureGluedString = preg_replace("/(\s)/ixsm", '', $this->latitudePaySignatureGluedString);
+    //     return (string) $this->latitudePaySignatureGluedString;
     // }
 
     // /**
