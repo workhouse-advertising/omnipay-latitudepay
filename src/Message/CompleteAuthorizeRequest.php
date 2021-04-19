@@ -19,7 +19,31 @@ class CompleteAuthorizeRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        // TODO: Check data and potentially throw a InvalidRequestException here.
+        // Ensure that the supplied data is an array.
+        $data = (array) $data;
+
+        // Get the supplied signature and remove it from the array.
+        $signature = $data['signature'] ?? null;
+        if (isset($data['signature'])) unset($data['signature']);
+
+        // NOTE: Cannot use http_build_query(...) as we need to remove only the query parameter delimiters.
+        //       The documentation doesn't say anything about whether or not those characters need to be removed
+        //       from any values though...
+        $gluedString = '';
+        foreach ($data as $key => $item) {
+            $gluedString .= "{$key}{$item}";
+        }
+
+        // Strip white space.
+        $gluedString = preg_replace('/\s*/', '', $gluedString);
+
+        // Calculate the signature for this request.
+        $calculatedSignature = hash_hmac('sha256', base64_encode($gluedString), $this->getClientSecret());
+        
+        // Ensure that the signature is valid.
+        if (!$signature || $signature != $calculatedSignature) {
+            throw new InvalidRequestException("Invalid signature in the response from LatitudePay.");
+        }
 
         return new CompleteAuthorizeResponse($this, $data);
     }

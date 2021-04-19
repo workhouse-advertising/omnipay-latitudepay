@@ -6,10 +6,14 @@ use Omnipay\LatitudePay\Message\Response;
 
 class CompleteAuthorizeResponse extends Response
 {
+    const RESULT_COMPLETE = 'COMPLETED';
+
     public function isSuccessful()
     {
-        return false;
+        return ($this->getData()['result'] ?? null) === static::RESULT_COMPLETE;
     }
+
+    // TODO: See about adding message handling.
 
     // TODO: Check available statuses and add checks here.
 
@@ -25,11 +29,11 @@ class CompleteAuthorizeResponse extends Response
 
     public function getTransactionId()
     {
-        return null;
+        return ($this->getData()['reference'] ?? null);
     }
 
     public function getTransactionReference()
     {
-        return null;
+        return ($this->getData()['token'] ?? null);
     }
 }

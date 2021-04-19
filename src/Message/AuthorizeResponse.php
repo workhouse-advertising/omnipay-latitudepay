@@ -25,7 +25,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     public function isRedirect()
     {
         $data = $this->getData();
-        return isset($data['redirectUrl']);
+        return isset($data['paymentUrl']);
     }
 
     /**
@@ -34,6 +34,15 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     public function getRedirectUrl()
     {
         $data = $this->getData();
-        return $data['redirectUrl'] ?? null;
+        return $data['paymentUrl'] ?? null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTransactionReference()
+    {
+        $data = $this->getData();
+        return $data['reference'] ?? null;
     }
 }

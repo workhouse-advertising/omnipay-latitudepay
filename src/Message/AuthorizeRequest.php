@@ -39,10 +39,10 @@ class AuthorizeRequest extends AbstractRequest
             // TODO: Add support for shipping lines.
             // 'shippingLines' => $this->getShippingLines(),
             // TODO: Add support for `taxAmount`.
-            // 'taxAmount' => [
-            //     'amount' => 0,
-            //     'currency' => $this->getCurrency(),
-            // ],
+            'taxAmount' => [
+                'amount' => 0,
+                'currency' => $this->getCurrency(),
+            ],
             // TODO: Consider if we need a custom reference or if the transaction ID is fine to use.
             //       Alternatively, maybe check if a reference has been set and fall back to the transaction 
             //       ID if it hasn't.
@@ -58,22 +58,7 @@ class AuthorizeRequest extends AbstractRequest
                 'failUrl' => $this->getCancelUrl(),
                 // 'failUrl' => $this->getReturnUrl(),
                 'callbackUrl' => $this->getNotifyUrl(),
-            ], 
-            // // NOTE: Have to cast to a float/double otherwise we receive an empty response from the gateway.
-            // // TODO: Report a bug to Latitude Checkout and ensure that float casting won't cause rounding errors.
-            // 'amount' => (float) $this->getAmount(),
-            // 'currency' => $this->getCurrency(), 
-            // 'promotionReference' => $this->getPromotionReference(),
-            // 'merchantUrls' => [
-            //     'cancel' => $this->getCancelUrl(), 
-            //     'complete' => $this->getReturnUrl(),
-            // ], 
-            // // TODO: Add support for shipping amounts.
-            // // 'totalShippingAmount' => 50.00,
-            // // TODO: Add support for platformType and platformVersion changes.
-            // //       These are just metadata references for the system that's integrating with Latitude Checkout.
-            // // 'platformType' => 'omnipay', 
-            // // 'platformVersion' => '1.0.0',
+            ],
         ];
 
         return $data;
@@ -195,12 +180,6 @@ class AuthorizeRequest extends AbstractRequest
             // 'X-Idempotency-Key' => $this->getTransactionId(),
         ];
 
-        // try {
-        //     $httpResponse = $this->httpClient->request('POST', $this->getEndpoint(), $headers, json_encode($data));
-        // } catch (\Exception $e) {
-        //     dd($e, $e->getRequest(), (string) $e->getRequest()->getBody());
-        // }
-
         $queryParameters = [
             // TODO: Report an issue with the docs because it says that `Signature` starts with an upper case character.
             // 'Signature' => $this->getPayloadSignature($data),
@@ -210,9 +189,6 @@ class AuthorizeRequest extends AbstractRequest
         $httpResponse = $this->httpClient->request('POST', $this->getEndpoint() . '/v3/sale/online?' . http_build_query($queryParameters), $headers, json_encode($data));
         $responseData = json_decode($httpResponse->getBody(), true);
         if ($httpResponse->getStatusCode() != 200) {
-
-            // dd($httpResponse, (string) $httpResponse->getBody(), $responseData, $queryParameters, $this->getEndpoint() . '/v3/sale/online?' . http_build_query($queryParameters));
-
             // TODO: Consider filtering the response body in case it may have sensitive information in there.
             //       Although that _should_ never occur.
             // TODO: Consider adding support for accessing the errors in the body. Perhaps return an AuthorizeResponse with errors?
@@ -220,8 +196,6 @@ class AuthorizeRequest extends AbstractRequest
             throw new InvalidRequestException("Invalid authorisation request to the LatitudePay API. Received status code '{$httpResponse->getStatusCode()}'.");
             // throw new InvalidRequestException("Invalid authorisation request to the LatitudePay API. Received status code '{$httpResponse->getStatusCode()}' and body: '{$httpResponse->getBody()}'.");
         }
-
-        // dd($httpResponse, (string) $httpResponse->getBody(), $responseData);
 
         return new AuthorizeResponse($this, $responseData);
     }
