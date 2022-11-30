@@ -1,4 +1,5 @@
 <?php
+
 namespace Omnipay\LatitudePay\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;

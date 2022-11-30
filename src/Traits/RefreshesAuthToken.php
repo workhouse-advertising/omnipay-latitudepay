@@ -2,6 +2,8 @@
 
 namespace Omnipay\LatitudePay\Traits;
 
+use Omnipay\Common\Exception\InvalidRequestException;
+
 trait RefreshesAuthToken
 {
     public function checkAndRefreshToken()
@@ -26,18 +28,13 @@ trait RefreshesAuthToken
         $httpResponse = $this->httpClient->request('POST', $this->getEndpoint() . '/v3/token', $headers, json_encode($data));
         $responseData = json_decode($httpResponse->getBody(), true);
         if ($httpResponse->getStatusCode() != 200) {
-
-            // dd($httpResponse, (string) $httpResponse->getBody(), $responseData);
-
             // TODO: Consider filtering the response body in case it may have sensitive information in there.
             //       Although that _should_ never occur.
             // TODO: Consider adding support for accessing the errors in the body. Perhaps return an AuthorizeResponse with errors?
             //       Or maybe add a "debug" mode to this package?
             throw new InvalidRequestException("Unable to fetch an auth token from the LatitudePay API. Received status code '{$httpResponse->getStatusCode()}'.");
-            // throw new InvalidRequestException("Unable to fetch an auth token from the LatitudePay API. Received status code '{$httpResponse->getStatusCode()}' and body: '{$httpResponse->getBody()}'.");
         }
 
-        // dd($httpResponse, (string) $httpResponse->getBody(), $responseData);
         // TODO: Consider throwing an Exception if the auth token wasn't returned.
         $this->setAuthToken($responseData['authToken'] ?? null);
         $this->setAuthTokenExpires($responseData['expiryDate'] ?? null);
